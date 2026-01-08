@@ -319,13 +319,13 @@ numlock(const Arg *dummy)
 void
 changealpha(const Arg *arg)
 {
-	if((alpha > 0 && arg->f < 0) || (alpha < 1 && arg->f > 0))
-		alpha += arg->f;
-	alpha = clamp(alpha, 0.0, 1.0);
- 	alphaUnfocus = clamp(alpha-alphaOffset, 0.0, 1.0);
+    if((alpha > 0 && arg->f < 0) || (alpha < 1 && arg->f > 0))
+        alpha += arg->f;
+    alpha = clamp(alpha, 0.0, 1.0);
+    alphaUnfocus = clamp(alpha-alphaOffset, 0.0, 1.0);
 
-	xloadcols();
-	redraw();
+    xloadcols();
+    redraw();
 }
 
 void
@@ -383,11 +383,11 @@ evrow(XEvent *e)
 
 float
 clamp(float value, float lower, float upper) {
-	if(value < lower)
-		return lower;
-	if(value > upper)
-		return upper;
-	return value;
+    if(value < lower)
+        return lower;
+    if(value > upper)
+        return upper;
+    return value;
 }
 
 void
@@ -1663,7 +1663,8 @@ xdrawglyphfontspecs(const XftGlyphFontSpec *specs, Glyph base, int len, int x, i
 
 	/* Render underline and strikethrough. */
 	if (base.mode & ATTR_UNDERLINE) {
-		XftDrawRect(xw.draw, fg, winx, winy + dc.font.ascent + 1, width, 1);
+		XftDrawRect(xw.draw, fg, winx, winy + dc.font.ascent + 1,
+                width, 1);
 	}
 
 	if (base.mode & ATTR_STRUCK) {
@@ -2216,56 +2217,58 @@ run(void)
 	}
 }
 
-int
-resource_load(XrmDatabase db, char *name, enum resource_type rtype, void *dst)
-{
-	char **sdst = dst;
-	int *idst = dst;
-	float *fdst = dst;
+/* int */
+/* resource_load(XrmDatabase db, char *name, enum resource_type rtype, void *dst) */
+/* { */
+/* 	char **sdst = dst; */
+/* 	int *idst = dst; */
+/* 	float *fdst = dst; */
 
-	char fullname[256];
-	char fullclass[256];
-	char *type;
-	XrmValue ret;
+/* 	char fullname[256]; */
+/* 	char fullclass[256]; */
+/* 	char *type; */
+/* 	XrmValue ret; */
 
-	snprintf(fullname, sizeof(fullname), "%s.%s","st", name);
-	snprintf(fullclass, sizeof(fullclass), "%s.%s", "St", name);
-	fullname[sizeof(fullname) - 1] = fullclass[sizeof(fullclass) - 1] = '\0';
+/* 	snprintf(fullname, sizeof(fullname), "%s.%s", */
+/* 			opt_name ? opt_name : "st", name); */
+/* 	snprintf(fullclass, sizeof(fullclass), "%s.%s", */
+/* 			opt_class ? opt_class : "St", name); */
+/* 	fullname[sizeof(fullname) - 1] = fullclass[sizeof(fullclass) - 1] = '\0'; */
 
-	XrmGetResource(db, fullname, fullclass, &type, &ret);
-	if (ret.addr == NULL || strncmp("String", type, 64))
-		return 1;
+/* 	XrmGetResource(db, fullname, fullclass, &type, &ret); */
+/* 	if (ret.addr == NULL || strncmp("String", type, 64)) */
+/* 		return 1; */
 
-	switch (rtype) {
-	case STRING:
-		*sdst = ret.addr;
-		break;
-	case INTEGER:
-		*idst = strtoul(ret.addr, NULL, 10);
-		break;
-	case FLOAT:
-		*fdst = strtof(ret.addr, NULL);
-		break;
-	}
-	return 0;
-}
+/* 	switch (rtype) { */
+/* 	case STRING: */
+/* 		*sdst = ret.addr; */
+/* 		break; */
+/* 	case INTEGER: */
+/* 		*idst = strtoul(ret.addr, NULL, 10); */
+/* 		break; */
+/* 	case FLOAT: */
+/* 		*fdst = strtof(ret.addr, NULL); */
+/* 		break; */
+/* 	} */
+/* 	return 0; */
+/* } */
 
-void
-config_init(void)
-{
-	char *resm;
-	XrmDatabase db;
-	ResourcePref *p;
+/* void */
+/* config_init(void) */
+/* { */
+/* 	char *resm; */
+/* 	XrmDatabase db; */
+/* 	ResourcePref *p; */
 
-	XrmInitialize();
-	resm = XResourceManagerString(xw.dpy);
-	if (!resm)
-		return;
+/* 	XrmInitialize(); */
+/* 	resm = XResourceManagerString(xw.dpy); */
+/* 	if (!resm) */
+/* 		return; */
 
-	db = XrmGetStringDatabase(resm);
-	for (p = resources; p < resources + LEN(resources); p++)
-		resource_load(db, p->name, p->type, p->dst);
-}
+/* 	db = XrmGetStringDatabase(resm); */
+/* 	for (p = resources; p < resources + LEN(resources); p++) */
+/* 		resource_load(db, p->name, p->type, p->dst); */
+/* } */
 
 void
 usage(void)
@@ -2347,7 +2350,7 @@ run:
 	if(!(xw.dpy = XOpenDisplay(NULL)))
 		die("Can't open display\n");
 
-	config_init();
+	/* config_init(); */
 	cols = MAX(cols, 1);
 	rows = MAX(rows, 1);
 	defaultbg = MAX(LEN(colorname), 256);
