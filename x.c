@@ -2217,58 +2217,62 @@ run(void)
 	}
 }
 
-/* int */
-/* resource_load(XrmDatabase db, char *name, enum resource_type rtype, void *dst) */
-/* { */
-/* 	char **sdst = dst; */
-/* 	int *idst = dst; */
-/* 	float *fdst = dst; */
+#if 0
 
-/* 	char fullname[256]; */
-/* 	char fullclass[256]; */
-/* 	char *type; */
-/* 	XrmValue ret; */
+int
+resource_load(XrmDatabase db, char *name, enum resource_type rtype, void *dst)
+{
+	char **sdst = dst;
+	int *idst = dst;
+	float *fdst = dst;
 
-/* 	snprintf(fullname, sizeof(fullname), "%s.%s", */
-/* 			opt_name ? opt_name : "st", name); */
-/* 	snprintf(fullclass, sizeof(fullclass), "%s.%s", */
-/* 			opt_class ? opt_class : "St", name); */
-/* 	fullname[sizeof(fullname) - 1] = fullclass[sizeof(fullclass) - 1] = '\0'; */
+	char fullname[256];
+	char fullclass[256];
+	char *type;
+	XrmValue ret;
 
-/* 	XrmGetResource(db, fullname, fullclass, &type, &ret); */
-/* 	if (ret.addr == NULL || strncmp("String", type, 64)) */
-/* 		return 1; */
+	snprintf(fullname, sizeof(fullname), "%s.%s",
+			opt_name ? opt_name : "st", name);
+	snprintf(fullclass, sizeof(fullclass), "%s.%s",
+			opt_class ? opt_class : "St", name);
+	fullname[sizeof(fullname) - 1] = fullclass[sizeof(fullclass) - 1] = '\0';
 
-/* 	switch (rtype) { */
-/* 	case STRING: */
-/* 		*sdst = ret.addr; */
-/* 		break; */
-/* 	case INTEGER: */
-/* 		*idst = strtoul(ret.addr, NULL, 10); */
-/* 		break; */
-/* 	case FLOAT: */
-/* 		*fdst = strtof(ret.addr, NULL); */
-/* 		break; */
-/* 	} */
-/* 	return 0; */
-/* } */
+	XrmGetResource(db, fullname, fullclass, &type, &ret);
+	if (ret.addr == NULL || strncmp("String", type, 64))
+		return 1;
 
-/* void */
-/* config_init(void) */
-/* { */
-/* 	char *resm; */
-/* 	XrmDatabase db; */
-/* 	ResourcePref *p; */
+	switch (rtype) {
+	case STRING:
+		*sdst = ret.addr;
+		break;
+	case INTEGER:
+		*idst = strtoul(ret.addr, NULL, 10);
+		break;
+	case FLOAT:
+		*fdst = strtof(ret.addr, NULL);
+		break;
+	}
+	return 0;
+}
 
-/* 	XrmInitialize(); */
-/* 	resm = XResourceManagerString(xw.dpy); */
-/* 	if (!resm) */
-/* 		return; */
+void
+config_init(void)
+{
+	char *resm;
+	XrmDatabase db;
+	ResourcePref *p;
 
-/* 	db = XrmGetStringDatabase(resm); */
-/* 	for (p = resources; p < resources + LEN(resources); p++) */
-/* 		resource_load(db, p->name, p->type, p->dst); */
-/* } */
+	XrmInitialize();
+	resm = XResourceManagerString(xw.dpy);
+	if (!resm)
+		return;
+
+	db = XrmGetStringDatabase(resm);
+	for (p = resources; p < resources + LEN(resources); p++)
+		resource_load(db, p->name, p->type, p->dst);
+}
+
+#endif
 
 void
 usage(void)
@@ -2350,7 +2354,9 @@ run:
 	if(!(xw.dpy = XOpenDisplay(NULL)))
 		die("Can't open display\n");
 
-	/* config_init(); */
+#if 0
+	config_init();
+#endif
 	cols = MAX(cols, 1);
 	rows = MAX(rows, 1);
 	defaultbg = MAX(LEN(colorname), 256);
